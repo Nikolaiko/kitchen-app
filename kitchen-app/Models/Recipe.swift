@@ -1,0 +1,33 @@
+//
+//  Recipe.swift
+//  kitchen-app
+//
+//  Created by Nikolai Baklanov on 13.10.2026.
+//
+
+import SwiftData
+import Foundation
+
+@Model
+final class Recipe {
+    var title: String = ""
+    var summary: String = ""
+    var servings: Int = 2
+    var cookingMinutes: Int = 0
+    var ingredientsText: String = ""
+    var isFavorite: Bool = false
+    var createdAt: Date = Date.now
+
+    init(title: String = "",
+         summary: String = "",
+         servings: Int = 2,
+         cookingMinutes: Int = 0,
+         ingredientsText: String = "")
+    {
+        self.title = title
+        self.summary = summary
+        self.servings = servings
+        self.cookingMinutes = cookingMinutes
+        self.ingredientsText = ingredientsText
+    }
+}
