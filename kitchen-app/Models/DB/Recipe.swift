@@ -17,17 +17,29 @@ final class Recipe {
     var ingredientsText: String = ""
     var isFavorite: Bool = false
     var createdAt: Date = Date.now
+    var difficulty: Difficulty = Difficulty.easy
+    
+    var nutrition: Nutrition?
+
+    @Attribute(.externalStorage)
+    var photo: Data?
 
     init(title: String = "",
          summary: String = "",
          servings: Int = 2,
          cookingMinutes: Int = 0,
-         ingredientsText: String = "")
+         ingredientsText: String = "",
+         difficulty: Difficulty = .easy,
+         nutrition: Nutrition? = Nutrition.zero,
+         photo: Data? = nil)
     {
         self.title = title
         self.summary = summary
         self.servings = servings
         self.cookingMinutes = cookingMinutes
         self.ingredientsText = ingredientsText
+        self.nutrition = nutrition
+        self.difficulty = difficulty
+        self.photo = photo
     }
 }
