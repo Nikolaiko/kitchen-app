@@ -14,10 +14,19 @@ struct EditRecipeView: View {
 
     var body: some View {
         Form {
+            
             TextField("Название", text: $recipe.title)
+            TextField("Описание", text: $recipe.summury)
+
+            Stepper("Порции: \(recipe.servings)",
+                    value: $recipe.servings,
+                    step: 1)
+
             Stepper("Время: \(recipe.cookingMinutes)",
-            value: $recipe.cookingMinutes,
-            step: 5)
+                    value: $recipe.cookingMinutes,
+                    step: 5)
+
+            Toggle(isOn: $recipe.isFavorite, label: { Text("Избранное:") })
         }
         .navigationTitle("Изменить рецепт")
     }

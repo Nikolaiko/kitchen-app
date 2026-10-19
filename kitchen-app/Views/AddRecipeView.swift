@@ -18,17 +18,23 @@ struct AddRecipeView: View {
 
     @State
     private var title: String = ""
-
+    @State
+    private var summary: String = ""
     @State
     private var minutes: Int = 30
+    @State
+    private var servings: Int = 1
+    @State
+    private var isFavorite: Bool = false
 
     var body: some View {
         NavigationStack {
             Form {
                 TextField("Название", text: $title)
-                Stepper("Время: \(minutes)",
-                value: $minutes,
-                step: 5)
+                TextField("Описание", text: $summary)
+                Stepper("Порции: \(servings)", value: $servings, step: 1)
+                Stepper("Время: \(minutes)", value: $minutes, step: 5)
+                Toggle(isOn: $isFavorite, label: { Text("Избранное:") })
             }
             .navigationTitle("Добавление")
             .toolbar {
@@ -44,7 +50,12 @@ struct AddRecipeView: View {
     }
 
     private func save() {
-        let recipe = DBRecipe(title: title, cookingMinutes: minutes)
+        let recipe = DBRecipe(
+            title: title,
+            summury: summary,
+            servings: servings,
+            cookingMinutes: minutes,
+            isFavorite: isFavorite)
         modelContext.insert(recipe)
         dismiss()
     }
