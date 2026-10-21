@@ -6,7 +6,7 @@
 //
 
 import SwiftData
-import Foundation
+import UIKit
 
 @Model
 final class Recipe {
@@ -18,8 +18,22 @@ final class Recipe {
     var isFavorite: Bool = false
     var createdAt: Date = Date.now
     var difficulty: Difficulty = Difficulty.easy
-    
+    var equipment: [String] = []
+
     var nutrition: Nutrition?
+
+    @Transient
+    private var thumbnailCache: (source: Data, image: UIImage)? = nil
+
+    var thumbnail: UIImage? {
+        guard let photo else { return nil }
+        if let thumbnailCache, thumbnailCache.source == photo {
+            return thumbnailCache.image
+        }
+        let image = UIImage(data: photo)?.preparingThumbnail(of: CGSize(width: 120, height: 120))
+        thumbnailCache = image.map { (photo, $0) }
+        return image
+    }
 
     @Attribute(.externalStorage)
     var photo: Data?
@@ -29,6 +43,7 @@ final class Recipe {
          servings: Int = 2,
          cookingMinutes: Int = 0,
          ingredientsText: String = "",
+         equipment: [String] = [],
          difficulty: Difficulty = .easy,
          nutrition: Nutrition? = Nutrition.zero,
          photo: Data? = nil)
@@ -41,5 +56,6 @@ final class Recipe {
         self.nutrition = nutrition
         self.difficulty = difficulty
         self.photo = photo
+        self.equipment = equipment
     }
 }

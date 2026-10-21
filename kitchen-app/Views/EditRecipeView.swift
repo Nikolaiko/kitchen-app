@@ -19,6 +19,7 @@ struct EditRecipeView: View {
                     value: $recipe.cookingMinutes,
                     in: 5...600,
                     step: 5)
+
             Section {
                 TextEditor(text: $recipe.ingredientsText)
                     .frame(minHeight: 120)
@@ -26,6 +27,15 @@ struct EditRecipeView: View {
                 Text("Ингредиенты")
             } footer: {
                 Text("По одному на строку, например: Картофель — 3 шт, кубиками")
+            }
+
+            EquipmentSection(items: $recipe.equipment)
+
+            Picker("Сложность", selection: $recipe.difficulty) {
+                ForEach(Difficulty.allCases) { format in
+                    Text(recipe.difficulty.rawValue)
+                        .tag(recipe.difficulty)
+                }
             }
         }
         .navigationTitle("Изменить рецепт")

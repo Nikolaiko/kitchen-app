@@ -7,6 +7,11 @@
 
 import Foundation
 
-enum Difficulty: Codable, CaseIterable {
-    case easy, normal, hard
+enum Difficulty: String, Codable, CaseIterable, Identifiable {
+
+    var id: Self { self }
+
+    case easy = "Легко"
+    case normal = "Нормально"
+    case hard = "Заебешься"
 }
