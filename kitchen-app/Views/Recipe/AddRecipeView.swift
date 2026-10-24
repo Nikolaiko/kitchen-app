@@ -117,7 +117,7 @@ struct AddRecipeView: View {
         draft.ingredientsText = ingredients
         draft.equipment = equipment
         draft.difficulty = difficulty
-        draft.photo = data
+        draft.coverPhoto = data
         modelContext.insert(draft)
         try? modelContext.save()
         dismiss()

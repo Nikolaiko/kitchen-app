@@ -23,17 +23,17 @@ final class Recipe {
     var nutrition: Nutrition?
 
     var thumbnail: UIImage? {
-        guard let photo else { return nil }
-        if let thumbnailCache, thumbnailCache.source == photo {
+        guard let coverPhoto else { return nil }
+        if let thumbnailCache, thumbnailCache.source == coverPhoto {
             return thumbnailCache.image
         }
-        let image = UIImage(data: photo)?.preparingThumbnail(of: CGSize(width: 120, height: 120))
-        thumbnailCache = image.map { (photo, $0) }
+        let image = UIImage(data: coverPhoto)?.preparingThumbnail(of: CGSize(width: 120, height: 120))
+        thumbnailCache = image.map { (coverPhoto, $0) }
         return image
     }
 
     @Attribute(.externalStorage)
-    var photo: Data?
+    var coverPhoto: Data?
 
     @Transient
     private var thumbnailCache: (source: Data, image: UIImage)? = nil
@@ -53,7 +53,7 @@ final class Recipe {
          equipment: [String] = [],
          difficulty: Difficulty = .easy,
          nutrition: Nutrition? = Nutrition.zero,
-         photo: Data? = nil)
+         coverPhoto: Data? = nil)
     {
         self.title = title
         self.summary = summary
@@ -62,7 +62,7 @@ final class Recipe {
         self.ingredientsText = ingredientsText
         self.nutrition = nutrition
         self.difficulty = difficulty
-        self.photo = photo
+        self.coverPhoto = coverPhoto
         self.equipment = equipment
     }
 }
