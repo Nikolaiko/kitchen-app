@@ -11,7 +11,15 @@ enum Difficulty: String, Codable, CaseIterable, Identifiable {
 
     var id: Self { self }
 
-    case easy = "Легко"
-    case normal = "Нормально"
-    case hard = "Заебешься"
+    case easy
+    case medium
+    case hard
+
+    var title: String {
+        switch self {
+        case .easy: "Легко"
+        case .medium: "Нормально"
+        case .hard: "Заебешься"
+        }
+    }
 }

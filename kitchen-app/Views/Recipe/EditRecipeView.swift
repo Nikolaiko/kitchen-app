@@ -38,8 +38,8 @@ struct EditRecipeView: View {
 
             Picker("Сложность", selection: $recipe.difficulty) {
                 ForEach(Difficulty.allCases) { format in
-                    Text(recipe.difficulty.rawValue)
-                        .tag(recipe.difficulty)
+                    Text(format.title)
+                        .tag(format)
                 }
             }
         }

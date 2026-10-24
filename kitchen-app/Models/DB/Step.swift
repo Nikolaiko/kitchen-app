@@ -11,12 +11,12 @@ import SwiftData
 @Model
 final class Step {
     var position: Int = 0
-    var timeMinutes: Int = 0
+    var timerMinutes: Int?
     var recipe: Recipe?
     var text: String = ""
 
-    init(timeMinutes: Int = 0, text: String = "", position: Int) {
-        self.timeMinutes = timeMinutes
+    init(timerMinutes: Int? = nil, text: String = "", position: Int) {
+        self.timerMinutes = timerMinutes
         self.text = text
         self.position = position
     }
