@@ -12,6 +12,9 @@ struct EditRecipeView: View {
     @Bindable
     var recipe: Recipe
 
+    @State
+    private var isAddingStep: Bool = false
+
     var body: some View {
         Form {
             TextField("Название", text: $recipe.title)
@@ -31,6 +34,8 @@ struct EditRecipeView: View {
 
             EquipmentSection(items: $recipe.equipment)
 
+            StepsSection(recipe: recipe, onAdd: { isAddingStep = true })
+
             Picker("Сложность", selection: $recipe.difficulty) {
                 ForEach(Difficulty.allCases) { format in
                     Text(recipe.difficulty.rawValue)
@@ -39,6 +44,9 @@ struct EditRecipeView: View {
             }
         }
         .navigationTitle("Изменить рецепт")
+        .sheet(isPresented: $isAddingStep) {
+            AddStepView(recipe: recipe)
+        }
     }
 }
 

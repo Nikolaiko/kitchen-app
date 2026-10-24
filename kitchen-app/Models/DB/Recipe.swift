@@ -22,9 +22,6 @@ final class Recipe {
 
     var nutrition: Nutrition?
 
-    @Transient
-    private var thumbnailCache: (source: Data, image: UIImage)? = nil
-
     var thumbnail: UIImage? {
         guard let photo else { return nil }
         if let thumbnailCache, thumbnailCache.source == photo {
@@ -37,6 +34,16 @@ final class Recipe {
 
     @Attribute(.externalStorage)
     var photo: Data?
+
+    @Transient
+    private var thumbnailCache: (source: Data, image: UIImage)? = nil
+
+    @Relationship(deleteRule: .cascade, inverse: \Step.recipe)
+    var steps: [Step] = []
+
+    var orderedStep: [Step] {
+        steps.sorted { $0.position < $1.position }
+    }
 
     init(title: String = "",
          summary: String = "",

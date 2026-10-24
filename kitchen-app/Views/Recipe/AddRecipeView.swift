@@ -43,6 +43,13 @@ struct AddRecipeView: View {
 
     @State private var photoItem: PhotosPickerItem?
 
+    // Шаги копятся в черновике, в контекст он попадает только в save()
+    @State
+    private var draft = Recipe()
+
+    @State
+    private var isAddingStep: Bool = false
+
     var body: some View {
         NavigationStack {
             Form {
@@ -61,6 +68,8 @@ struct AddRecipeView: View {
                 }
 
                 EquipmentSection(items: $equipment)
+
+                StepsSection(recipe: draft, onAdd: { isAddingStep = true })
 
                 Picker("Сложность", selection: $difficulty) {
                     ForEach(Difficulty.allCases) { format in
@@ -87,6 +96,9 @@ struct AddRecipeView: View {
             }
             .photosPicker(isPresented: $isImporting, selection: $photoItem, matching: .images)
             .task(id: photoItem) { await load() }
+            .sheet(isPresented: $isAddingStep) {
+                AddStepView(recipe: draft)
+            }
         }
     }
 
@@ -100,8 +112,14 @@ struct AddRecipeView: View {
     }
 
     private func save() {
-        let recipe = Recipe(title: title, cookingMinutes: minutes, ingredientsText: ingredients, equipment: equipment, difficulty: difficulty, photo: data)
-        modelContext.insert(recipe)
+        draft.title = title
+        draft.cookingMinutes = minutes
+        draft.ingredientsText = ingredients
+        draft.equipment = equipment
+        draft.difficulty = difficulty
+        draft.photo = data
+        modelContext.insert(draft)
+        try? modelContext.save()
         dismiss()
     }
 }
