@@ -39,6 +39,13 @@ class DBRecipe {
         return image
     }
 
+    @Relationship(deleteRule: .cascade, inverse: \DBStep.recipe)
+    var steps: [DBStep] = []
+
+    var orderedSteps: [DBStep] {
+        steps.sorted { $0.position < $1.position }
+    }
+
     init(title: String = "",
          summury: String = "",
          servings: Int = 1,

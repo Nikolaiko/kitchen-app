@@ -44,6 +44,12 @@ struct AddRecipeView: View {
     @State
     var errorMessage: String?
 
+    @State
+    var isAddingStep: Bool = false
+
+    @State
+    var draft: DBRecipe = DBRecipe()
+
     var body: some View {
         NavigationStack {
             Form {
@@ -75,6 +81,8 @@ struct AddRecipeView: View {
 
                 EquipmentSection(items: $equipment)
 
+                StepsSection(recipe: draft, onAdd: { isAddingStep = true })
+
                 Button("Импортировать файл…") { isImporting = true }
 
                 if let errorMessage {
@@ -93,6 +101,9 @@ struct AddRecipeView: View {
             }
             .photosPicker(isPresented: $isImporting, selection: $photoItem, matching: .images)
             .task(id: photoItem) { await load() }
+            .sheet(isPresented: $isAddingStep) {
+                AddStepView(recipe: draft)
+            }
         }
     }
 
@@ -106,17 +117,18 @@ struct AddRecipeView: View {
     }
 
     private func save() {
-        let recipe = DBRecipe(
-            title: title,
-            summury: summary,
-            servings: servings,
-            cookingMinutes: minutes,
-            isFavorite: isFavorite,
-            coverPhoto: data,
-            difficulty: difficulty,
-            ingredientsText: ingredientsText,
-            equipment: equipment)
-        modelContext.insert(recipe)
+        draft.title = title
+        draft.summury = summary
+        draft.servings = servings
+        draft.cookingMinutes = minutes
+        draft.isFavorite = isFavorite
+        draft.coverPhoto = data
+        draft.difficulty = difficulty
+        draft.ingredientsText = ingredientsText
+        draft.equipment = equipment
+        draft.coverPhoto = data
+
+        modelContext.insert(draft)
         try? modelContext.save()
         dismiss()
     }

@@ -23,6 +23,9 @@ struct EditRecipeView: View {
     @State
     var errorMessage: String?
 
+    @State
+    var isAddingStep: Bool = false
+
     var body: some View {
         Form {
             
@@ -57,6 +60,8 @@ struct EditRecipeView: View {
 
             EquipmentSection(items: $recipe.equipment)
 
+            StepsSection(recipe: recipe, onAdd: { isAddingStep = true })
+
             Button("Импортировать файл…") { isImporting = true }
 
             if let errorMessage {
@@ -66,6 +71,9 @@ struct EditRecipeView: View {
         .navigationTitle("Изменить рецепт")
         .photosPicker(isPresented: $isImporting, selection: $photoItem, matching: .images)
         .task(id: photoItem) { await load() }
+        .sheet(isPresented: $isAddingStep) {
+            AddStepView(recipe: recipe)
+        }
     }
 
     private func load() async {

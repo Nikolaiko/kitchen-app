@@ -7,6 +7,6 @@ import SwiftData
         WindowGroup {
             ContentView()
         }
-        .modelContainer(for: DBRecipe.self)
+        .modelContainer(for: [DBRecipe.self, DBStep.self])
     }
 }
