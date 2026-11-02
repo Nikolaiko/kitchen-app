@@ -45,6 +45,16 @@ final class Recipe {
         steps.sorted { $0.position < $1.position }
     }
 
+    @Relationship(inverse: \Tag.recipes)
+    var tags: [Tag] = []
+
+    @Relationship(deleteRule: .cascade, inverse: \RecipeIngredient.recipe)
+    var ingredients: [RecipeIngredient] = []
+
+    var orderedIngredients: [RecipeIngredient] {
+        ingredients.sorted { $0.position < $1.position }
+    }
+
     init(title: String = "",
          summary: String = "",
          servings: Int = 2,

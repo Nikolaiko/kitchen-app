@@ -12,6 +12,12 @@ struct ContentView: View {
     private var isAddingRecipe = false
 
     @State
+    private var isShowingTags = false
+
+    @State
+    private var isShowingIngredients = false
+
+    @State
     private var path: [Recipe] = []
 
     var body: some View {
@@ -44,19 +50,37 @@ struct ContentView: View {
                 EditRecipeView(recipe: recipe)
             }
             .toolbar {
-                Button {
-                    isAddingRecipe = true
+                ToolbarItem(placement: .topBarLeading) {
+                    Button("Добавить тэг") {
+                        isShowingTags = true
+                    }
                 }
-                label: { Text("Добавить рецепт") }
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Добавить рецепт") {
+                        isAddingRecipe = true
+                    }
+                }
+                ToolbarItem(placement: .bottomBar) {
+                    Button("Ингредиенты", systemImage: "carrot") {
+                        isShowingIngredients = true
+                    }
+                }
             }
         }
         .sheet(isPresented: $isAddingRecipe) {
             AddRecipeView()
         }
+        .sheet(isPresented: $isShowingTags) {
+            TagsView()
+        }
+        .sheet(isPresented: $isShowingIngredients) {
+            IngredientsView()
+        }
     }
 }
 
 #Preview {
+    TagColorTransform.register()
     let container = try! ModelContainer(
         for: Recipe.self,
         configurations: ModelConfiguration(isStoredInMemoryOnly: true)

@@ -17,6 +17,17 @@ struct AddRecipeView: View {
     @Environment(\.modelContext)
     private var modelContext
 
+    @Query(sort: \Tag.name)
+    private var tags: [Tag]
+
+    // До сохранения держим выбор отдельно: связь с сохранённым тегом
+    // может добавить черновик рецепта в контекст через inverse.
+    @State
+    private var selectedTags: [Tag] = []
+
+    @State
+    private var newTagName: String = ""
+
     @State
     private var title: String = ""
 
@@ -25,6 +36,12 @@ struct AddRecipeView: View {
 
     @State
     private var ingredients: String = ""
+
+    @State
+    private var ingredientDrafts: [RecipeIngredientDraft] = []
+
+    @State
+    private var isAddingIngredient = false
 
     @State
     private var equipment: [String] = []
@@ -40,6 +57,9 @@ struct AddRecipeView: View {
 
     @State
     private var data: Data?
+
+    @State
+    private var newTagColor: Color = .blue
 
     @State private var photoItem: PhotosPickerItem?
 
@@ -58,16 +78,68 @@ struct AddRecipeView: View {
                         value: $minutes,
                         in: 5...600,
                         step: 5)
+                Section("Ингредиенты") {
+                    ForEach(ingredientDrafts) { item in
+                        RecipeIngredientRow(
+                            name: item.ingredient.name,
+                            quantity: item.quantity,
+                            unit: item.unit,
+                            comment: item.comment
+                        )
+                        .swipeActions {
+                            Button("Убрать", systemImage: "minus.circle", role: .destructive) {
+                                ingredientDrafts.removeAll { $0.id == item.id }
+                            }
+                        }
+                    }
+                    Button("Добавить ингредиент", systemImage: "plus.circle.fill") {
+                        isAddingIngredient = true
+                    }
+                }
+
                 Section {
                     TextEditor(text: $ingredients)
                         .frame(minHeight: 120)
                 } header: {
-                    Text("Ингредиенты")
+                    Text("Ингредиенты текстом")
                 } footer: {
                     Text("По одному на строку, например: Картофель — 3 шт, кубиками")
                 }
 
                 EquipmentSection(items: $equipment)
+
+                Section("Теги") {
+                    ForEach(selectedTags.sorted { $0.name < $1.name }) { tag in
+                        TagView(name: tag.name, color: tag.color)
+                            .swipeActions {
+                                Button("Убрать", systemImage: "minus.circle", role: .destructive) {
+                                    selectedTags.removeAll { $0 == tag }
+                                }
+                            }
+                    }
+
+                    if !availableTags.isEmpty {
+                        Menu("Выбрать существующий тег", systemImage: "tag") {
+                            ForEach(availableTags) { tag in
+                                Button(tag.name) { addTag(tag) }
+                            }
+                        }
+                    }
+
+                    HStack {
+                        TextField("Новый тег", text: $newTagName)
+                            .onSubmit(addTagByName)
+                        ColorPicker(
+                            "Цвет нового тега",
+                            selection: $newTagColor,
+                            supportsOpacity: false
+                        )
+                        Button("Добавить тег", systemImage: "plus.circle.fill", action: addTagByName)
+                            .labelStyle(.iconOnly)
+                            .buttonStyle(.borderless)
+                            .disabled(!canAddTag)
+                    }
+                }
 
                 StepsSection(recipe: draft, onAdd: { isAddingStep = true })
 
@@ -99,7 +171,38 @@ struct AddRecipeView: View {
             .sheet(isPresented: $isAddingStep) {
                 AddStepView(recipe: draft)
             }
+            .sheet(isPresented: $isAddingIngredient) {
+                AddRecipeIngredientView { ingredientDrafts.append($0) }
+            }
         }
+    }
+
+    private var availableTags: [Tag] {
+        tags.filter { !selectedTags.contains($0) }
+    }
+
+    private var trimmedTagName: String {
+        newTagName.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    private var canAddTag: Bool {
+        !trimmedTagName.isEmpty && !selectedTags.contains {
+            $0.name.localizedCaseInsensitiveCompare(trimmedTagName) == .orderedSame
+        }
+    }
+
+    private func addTagByName() {
+        guard canAddTag else { return }
+        let tag = tags.first {
+            $0.name.localizedCaseInsensitiveCompare(trimmedTagName) == .orderedSame
+        } ?? Tag(name: trimmedTagName, color: UIColor(newTagColor))
+        addTag(tag)
+    }
+
+    private func addTag(_ tag: Tag) {
+        guard !selectedTags.contains(tag) else { return }
+        selectedTags.append(tag)
+        newTagName = ""
     }
 
     private func load() async {
@@ -119,12 +222,22 @@ struct AddRecipeView: View {
         draft.difficulty = difficulty
         draft.coverPhoto = data
         modelContext.insert(draft)
+        draft.tags = selectedTags
+        draft.ingredients = ingredientDrafts.enumerated().map { position, item in
+            item.makeModel(position: position)
+        }
         try? modelContext.save()
         dismiss()
     }
 }
 
 #Preview {
-    AddRecipeView()
-        .modelContainer(for: Recipe.self)
+    TagColorTransform.register()
+    let container = try! ModelContainer(
+        for: Recipe.self, Step.self, Tag.self, Ingredient.self, RecipeIngredient.self,
+        configurations: ModelConfiguration(isStoredInMemoryOnly: true)
+    )
+    container.mainContext.insert(Ingredient(name: "Мука"))
+    return AddRecipeView()
+        .modelContainer(container)
 }
