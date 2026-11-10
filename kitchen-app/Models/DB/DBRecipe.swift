@@ -46,6 +46,9 @@ class DBRecipe {
         steps.sorted { $0.position < $1.position }
     }
 
+    @Relationship(inverse: \DBTag.recipes)
+    var tags: [DBTag] = []
+
     init(title: String = "",
          summury: String = "",
          servings: Int = 1,

@@ -51,7 +51,7 @@ struct AddStepView: View {
 
     private func save() {
         let next = (recipe.steps.map(\.position).max() ?? -1) + 1
-        recipe.steps.append(DBStep(text: title, position: next))
+        recipe.steps.append(DBStep(timeMinutes: minutes, text: title, position: next))
         try? modelContext.save()
         dismiss()
     }

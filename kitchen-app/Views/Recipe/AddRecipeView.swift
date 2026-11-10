@@ -17,6 +17,12 @@ struct AddRecipeView: View {
     @Environment(\.modelContext)
     private var modelContext
 
+    @Query(sort: \DBTag.name)
+    private var tags: [DBTag]
+
+    @State
+    private var selectedTags: [DBTag] = []
+
     @State
     private var title: String = ""
     @State
@@ -50,6 +56,12 @@ struct AddRecipeView: View {
     @State
     var draft: DBRecipe = DBRecipe()
 
+    @State
+    private var newTagColor: Color = .blue
+
+    @State
+    private var newTagName: String = ""
+
     var body: some View {
         NavigationStack {
             Form {
@@ -81,6 +93,40 @@ struct AddRecipeView: View {
 
                 EquipmentSection(items: $equipment)
 
+                Section("Теги") {
+                    ForEach(selectedTags.sorted { $0.name < $1.name }) { tag in
+                        TagView(name: tag.name, color: tag.color)
+                            .swipeActions {
+                                Button("Убрать", systemImage: "minus.circle", role: .destructive) {
+                                    selectedTags.removeAll { $0 == tag }
+                                }
+                            }
+                    }
+
+                    if !availableTags.isEmpty {
+                        Menu("Выбрать существующий тег", systemImage: "tag") {
+                            ForEach(availableTags) { tag in
+                                Button(tag.name) { addTag(tag) }
+                            }
+                        }
+                    }
+
+                    HStack {
+                        TextField("Новый тег", text: $newTagName)
+                            .onSubmit(addTagByName)
+                        ColorPicker(
+                            "Цвет нового тега",
+                            selection: $newTagColor,
+                            supportsOpacity: false
+                        )
+                        Button("Добавить тег", systemImage: "plus.circle.fill", action: addTagByName)
+                            .labelStyle(.iconOnly)
+                            .buttonStyle(.borderless)
+                            .disabled(!canAddTag)
+                    }
+                }
+
+
                 StepsSection(recipe: draft, onAdd: { isAddingStep = true })
 
                 Button("Импортировать файл…") { isImporting = true }
@@ -107,6 +153,35 @@ struct AddRecipeView: View {
         }
     }
 
+    private func addTagByName() {
+        guard canAddTag else { return }
+        let tag = tags.first {
+            $0.name.localizedCaseInsensitiveCompare(trimmedTagName) == .orderedSame
+        } ?? DBTag(name: trimmedTagName, color: UIColor(newTagColor))
+
+        addTag(tag)
+    }
+
+    private func addTag(_ tag: DBTag) {
+        guard !selectedTags.contains(tag) else { return }
+        selectedTags.append(tag)
+        newTagName = ""
+    }
+
+    private var availableTags: [DBTag] {
+        tags.filter { !selectedTags.contains($0) }
+    }
+
+    private var trimmedTagName: String {
+        newTagName.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    private var canAddTag: Bool {
+        !trimmedTagName.isEmpty && !selectedTags.contains {
+            $0.name.localizedCaseInsensitiveCompare(trimmedTagName) == .orderedSame
+        }
+    }
+
     private func load() async {
         do {
             data = try await photoItem?.loadTransferable(type: Data.self)
@@ -127,6 +202,7 @@ struct AddRecipeView: View {
         draft.ingredientsText = ingredientsText
         draft.equipment = equipment
         draft.coverPhoto = data
+        draft.tags = selectedTags
 
         modelContext.insert(draft)
         try? modelContext.save()

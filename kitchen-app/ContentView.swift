@@ -15,6 +15,9 @@ struct ContentView: View {
     @State
     private var isAdding: Bool = false
 
+    @State
+    private var isShowingTags: Bool = false
+
     var body: some View {
         NavigationStack(path: $path) {
             List(recipes) { recipe in
@@ -47,16 +50,24 @@ struct ContentView: View {
                 EditRecipeView(recipe: recipe)
             }
             .toolbar {
-                Button {
-                    isAdding = true
-                } label: {
-                    Text("Добавить")
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Добавить рецепт") {
+                        isAdding = true
+                    }
                 }
 
+                ToolbarItem(placement: .topBarLeading) {
+                    Button("Добавить тэг") {
+                        isShowingTags = true
+                    }
+                }
             }
         }
         .sheet(isPresented: $isAdding) {
             AddRecipeView()
+        }
+        .sheet(isPresented: $isShowingTags) {
+            TagsView()
         }
 
     }
