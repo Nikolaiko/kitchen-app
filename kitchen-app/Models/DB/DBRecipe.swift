@@ -49,6 +49,13 @@ class DBRecipe {
     @Relationship(inverse: \DBTag.recipes)
     var tags: [DBTag] = []
 
+    @Relationship(deleteRule: .cascade, inverse: \DBRecipeIngridient.recipe)
+    var ingredients: [DBRecipeIngridient] = []
+
+    var orderedIngredients: [DBRecipeIngridient] {
+        ingredients.sorted { $0.position < $1.position }
+    }
+
     init(title: String = "",
          summury: String = "",
          servings: Int = 1,

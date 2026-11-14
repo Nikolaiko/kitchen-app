@@ -61,6 +61,18 @@ struct EditRecipeView: View {
 
             Toggle(isOn: $recipe.isFavorite, label: { Text("Избранное:") })
 
+            Section("Ингредиенты") {
+                ForEach(recipe.orderedIngredients) { item in
+                    RecipeIngridientRowView(
+                        name: item.ingridient?.name ?? "Ингредиент удалён",
+                        quantity: item.quantity,
+                        unit: item.unit,
+                        comment: item.comment
+                    )
+                }
+            }
+
+
             Section {
                 TextEditor(text: $recipe.ingredientsText)
                     .frame(minHeight: 120)

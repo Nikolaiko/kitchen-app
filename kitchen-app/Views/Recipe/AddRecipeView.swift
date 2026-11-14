@@ -38,11 +38,15 @@ struct AddRecipeView: View {
     @State
     private var ingredientsText: String = ""
     @State
+    private var ingredientDrafts: [RecipeIngredientDraft] = []
+    @State
     private var equipment: [String] = []
     @State
     private var data: Data?
     @State
     var isImporting: Bool = false
+    @State
+    private var isAddingIngredient = false
 
     @State
     var photoItem: PhotosPickerItem?
@@ -79,6 +83,25 @@ struct AddRecipeView: View {
                     ForEach(Difficulty.allCases) { format in
                         Text(format.rawValue)
                             .tag(format)
+                    }
+                }
+
+                Section("Ингредиенты") {
+                    ForEach(ingredientDrafts) { item in
+                        RecipeIngridientRowView(
+                            name: item.ingredient.name,
+                            quantity: item.quantity,
+                            unit: item.unit,
+                            comment: item.comment
+                        )
+                        .swipeActions {
+                            Button("Убрать", systemImage: "minus.circle", role: .destructive) {
+                                ingredientDrafts.removeAll { $0.id == item.id }
+                            }
+                        }
+                    }
+                    Button("Добавить ингредиент", systemImage: "plus.circle.fill") {
+                        isAddingIngredient = true
                     }
                 }
 
@@ -150,6 +173,9 @@ struct AddRecipeView: View {
             .sheet(isPresented: $isAddingStep) {
                 AddStepView(recipe: draft)
             }
+            .sheet(isPresented: $isAddingIngredient) {
+                AddRecipeIngredientView { ingredientDrafts.append($0) }
+            }
         }
     }
 
@@ -203,6 +229,9 @@ struct AddRecipeView: View {
         draft.equipment = equipment
         draft.coverPhoto = data
         draft.tags = selectedTags
+        draft.ingredients = ingredientDrafts.enumerated().map { position, item in
+            item.makeModel(position: position)
+        }
 
         modelContext.insert(draft)
         try? modelContext.save()
