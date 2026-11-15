@@ -33,6 +33,9 @@ struct EditRecipeView: View {
     var isAddingStep: Bool = false
 
     @State
+    private var isAddingIngredient = false
+
+    @State
     private var newTagColor: Color = .blue
 
     @State
@@ -69,6 +72,14 @@ struct EditRecipeView: View {
                         unit: item.unit,
                         comment: item.comment
                     )
+                    .swipeActions {
+                        Button("Убрать", systemImage: "minus.circle", role: .destructive) {
+                            removeIngredient(item)
+                        }
+                    }
+                }
+                Button("Добавить ингредиент", systemImage: "plus.circle.fill") {
+                    isAddingIngredient = true
                 }
             }
 
@@ -158,15 +169,15 @@ struct EditRecipeView: View {
         }
     }
 
-        private func removeTag(_ tag: DBTag) {
-            let previousTags = recipe.tags
-            recipe.tags.removeAll { $0 == tag }
-            do {
-                try modelContext.save()
-            } catch {
-                recipe.tags = previousTags
-            }
+    private func removeTag(_ tag: DBTag) {
+        let previousTags = recipe.tags
+        recipe.tags.removeAll { $0 == tag }
+        do {
+            try modelContext.save()
+        } catch {
+            recipe.tags = previousTags
         }
+    }
 
     private var availableTags: [DBTag] {
         tags.filter { !recipe.tags.contains($0) }
@@ -190,10 +201,43 @@ struct EditRecipeView: View {
         }
 
     }
+
+    private func addIngredient(_ draft: RecipeIngredientDraft) {
+        let position = (recipe.ingredients.map(\.position).max() ?? -1) + 1
+        let item = draft.makeModel(position: position)
+        modelContext.insert(item)
+        recipe.ingredients.append(item)
+        do {
+            try modelContext.save()
+        } catch {
+            recipe.ingredients.removeAll { $0 == item }
+            modelContext.delete(item)
+        }
+    }
+
+    private func removeIngredient(_ item: DBRecipeIngridient) {
+        recipe.ingredients.removeAll { $0 == item }
+        modelContext.delete(item)
+        do {
+            try modelContext.save()
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
 }
 
 #Preview {
-    NavigationStack {
-        EditRecipeView(recipe: DBRecipe(title: "Борщ", cookingMinutes: 6))
+    TagColorTransform.register()
+    let container = try! ModelContainer(
+        for: DBRecipe.self, DBStep.self, DBTag.self, DBIngridient.self, DBRecipeIngridient.self,
+        configurations: ModelConfiguration(isStoredInMemoryOnly: true)
+    )
+    let recipe = DBRecipe(title: "Борщ", servings: 6, cookingMinutes: 90)
+    container.mainContext.insert(recipe)
+    container.mainContext.insert(DBTag(name: "Обед"))
+    container.mainContext.insert(DBIngridient(name: "Мука"))
+    return NavigationStack {
+        EditRecipeView(recipe: recipe)
     }
+    .modelContainer(container)
 }
