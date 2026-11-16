@@ -17,7 +17,7 @@ struct StepsSection: View {
                         .foregroundStyle(.secondary)
                     Text(step.text)
                     Spacer()
-                    if let minutes = step.timerMinutes {
+                    if let minutes = step.durationMinutes {
                         Text("\(minutes) мин")
                             .foregroundStyle(.secondary)
                     }
@@ -54,12 +54,12 @@ struct StepsSection: View {
     }
 }
 
-#Preview {
-    let recipe = Recipe(title: "Омлет")
-    recipe.steps.append(Step(timerMinutes: 2, text: "Взбить яйца с молоком", position: 0))
-    recipe.steps.append(Step(text: "Посолить", position: 1))
-    return Form {
-        StepsSection(recipe: recipe, onAdd: {})
+#Preview(traits: .sampleData) {
+    @Previewable @Query(sort: \Recipe.createdAt) var recipes: [Recipe]
+
+    Form {
+        if let recipe = recipes.first {
+            StepsSection(recipe: recipe, onAdd: {})
+        }
     }
-    .modelContainer(for: [Recipe.self, Step.self], inMemory: true)
 }

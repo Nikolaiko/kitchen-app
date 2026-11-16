@@ -79,15 +79,6 @@ struct ContentView: View {
     }
 }
 
-#Preview {
-    TagColorTransform.register()
-    let container = try! ModelContainer(
-        for: Recipe.self,
-        configurations: ModelConfiguration(isStoredInMemoryOnly: true)
-    )
-    container.mainContext.insert(Recipe(title: "Борщ", servings: 6, cookingMinutes: 90))
-    container.mainContext.insert(Recipe(title: "Омлет", servings: 1, cookingMinutes: 10))
-    return ContentView()
-        .modelContainer(container)
+#Preview(traits: .sampleData) {
+    ContentView()
 }
-

@@ -161,14 +161,6 @@ struct TagsView: View {
     }
 }
 
-#Preview {
-    TagColorTransform.register()
-    let container = try! ModelContainer(
-        for: Recipe.self, Step.self, Tag.self,
-        configurations: ModelConfiguration(isStoredInMemoryOnly: true)
-    )
-    container.mainContext.insert(Tag(name: "Завтрак", color: .systemOrange))
-    container.mainContext.insert(Tag(name: "Быстро", color: .systemGreen))
-    return TagsView()
-        .modelContainer(container)
+#Preview(traits: .sampleData) {
+    TagsView()
 }

@@ -2,20 +2,32 @@ import SwiftUI
 import SwiftData
 
 @main struct MyApp: App {
+    @State private var store: Result<ModelContainer, Error>
+
     init() {
-        TagColorTransform.register()
+        _store = State(initialValue: Self.openStore())
     }
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            switch store {
+            case .success(let container):
+                ContentView()
+                    .modelContainer(container)
+            case .failure:
+                ModelContainerErrorView {
+                    store = Self.openStore()
+                }
+            }
         }
-        .modelContainer(for: [
-            Recipe.self,
-            Step.self,
-            Tag.self,
-            Ingredient.self,
-            RecipeIngredient.self
-        ])
+    }
+
+    private static func openStore() -> Result<ModelContainer, Error> {
+        let result = Result { try KitchenStore.make() }
+        if case .failure(let error) = result {
+            // Полная ошибка остаётся в консоли для разбора на стриме.
+            print("Не удалось открыть хранилище: \(error)")
+        }
+        return result
     }
 }

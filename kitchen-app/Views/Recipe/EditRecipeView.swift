@@ -60,15 +60,6 @@ struct EditRecipeView: View {
                 }
             }
 
-            Section {
-                TextEditor(text: $recipe.ingredientsText)
-                    .frame(minHeight: 120)
-            } header: {
-                Text("Ингредиенты текстом")
-            } footer: {
-                Text("По одному на строку, например: Картофель — 3 шт, кубиками")
-            }
-
             EquipmentSection(items: $recipe.equipment)
 
             Section("Теги") {
@@ -107,7 +98,7 @@ struct EditRecipeView: View {
             StepsSection(recipe: recipe, onAdd: { isAddingStep = true })
 
             Picker("Сложность", selection: $recipe.difficulty) {
-                ForEach(Difficulty.allCases) { format in
+                ForEach(CurrentSchema.Difficulty.allCases) { format in
                     Text(format.title)
                         .tag(format)
                 }
@@ -205,18 +196,12 @@ struct EditRecipeView: View {
     }
 }
 
-#Preview {
-    TagColorTransform.register()
-    let container = try! ModelContainer(
-        for: Recipe.self, Step.self, Tag.self, Ingredient.self, RecipeIngredient.self,
-        configurations: ModelConfiguration(isStoredInMemoryOnly: true)
-    )
-    let recipe = Recipe(title: "Борщ", servings: 6, cookingMinutes: 90)
-    container.mainContext.insert(recipe)
-    container.mainContext.insert(Tag(name: "Обед"))
-    container.mainContext.insert(Ingredient(name: "Мука"))
-    return NavigationStack {
-        EditRecipeView(recipe: recipe)
+#Preview(traits: .sampleData) {
+    @Previewable @Query(sort: \Recipe.createdAt) var recipes: [Recipe]
+
+    NavigationStack {
+        if let recipe = recipes.first {
+            EditRecipeView(recipe: recipe)
+        }
     }
-    .modelContainer(container)
 }

@@ -51,13 +51,16 @@ struct AddStepView: View {
 
     private func save() {
         let next = (recipe.steps.map(\.position).max() ?? -1) + 1
-        recipe.steps.append(Step(timerMinutes: minutes, text: title, position: next))
+        recipe.steps.append(Step(durationMinutes: minutes, text: title, position: next))
         try? modelContext.save()
         dismiss()
     }
 }
 
-#Preview {
-    AddStepView(recipe: Recipe(title: "Омлет"))
-        .modelContainer(for: [Recipe.self, Step.self], inMemory: true)
+#Preview(traits: .sampleData) {
+    @Previewable @Query(sort: \Recipe.createdAt) var recipes: [Recipe]
+
+    if let recipe = recipes.first {
+        AddStepView(recipe: recipe)
+    }
 }

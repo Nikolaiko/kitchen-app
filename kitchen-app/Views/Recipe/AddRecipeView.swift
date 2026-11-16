@@ -35,9 +35,6 @@ struct AddRecipeView: View {
     private var minutes: Int = 30
 
     @State
-    private var ingredients: String = ""
-
-    @State
     private var ingredientDrafts: [RecipeIngredientDraft] = []
 
     @State
@@ -47,7 +44,7 @@ struct AddRecipeView: View {
     private var equipment: [String] = []
 
     @State
-    private var difficulty: Difficulty = .easy
+    private var difficulty: CurrentSchema.Difficulty = .easy
 
     @State
     private var isImporting: Bool = false
@@ -97,15 +94,6 @@ struct AddRecipeView: View {
                     }
                 }
 
-                Section {
-                    TextEditor(text: $ingredients)
-                        .frame(minHeight: 120)
-                } header: {
-                    Text("Ингредиенты текстом")
-                } footer: {
-                    Text("По одному на строку, например: Картофель — 3 шт, кубиками")
-                }
-
                 EquipmentSection(items: $equipment)
 
                 Section("Теги") {
@@ -144,7 +132,7 @@ struct AddRecipeView: View {
                 StepsSection(recipe: draft, onAdd: { isAddingStep = true })
 
                 Picker("Сложность", selection: $difficulty) {
-                    ForEach(Difficulty.allCases) { format in
+                    ForEach(CurrentSchema.Difficulty.allCases) { format in
                         Text(format.title)
                             .tag(format)
                     }
@@ -217,7 +205,6 @@ struct AddRecipeView: View {
     private func save() {
         draft.title = title
         draft.cookingMinutes = minutes
-        draft.ingredientsText = ingredients
         draft.equipment = equipment
         draft.difficulty = difficulty
         draft.coverPhoto = data
@@ -231,13 +218,6 @@ struct AddRecipeView: View {
     }
 }
 
-#Preview {
-    TagColorTransform.register()
-    let container = try! ModelContainer(
-        for: Recipe.self, Step.self, Tag.self, Ingredient.self, RecipeIngredient.self,
-        configurations: ModelConfiguration(isStoredInMemoryOnly: true)
-    )
-    container.mainContext.insert(Ingredient(name: "Мука"))
-    return AddRecipeView()
-        .modelContainer(container)
+#Preview(traits: .sampleData) {
+    AddRecipeView()
 }

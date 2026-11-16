@@ -158,14 +158,6 @@ struct IngredientsView: View {
     }
 }
 
-#Preview {
-    TagColorTransform.register()
-    let container = try! ModelContainer(
-        for: Recipe.self, Step.self, Tag.self, Ingredient.self, RecipeIngredient.self,
-        configurations: ModelConfiguration(isStoredInMemoryOnly: true)
-    )
-    container.mainContext.insert(Ingredient(name: "Мука"))
-    container.mainContext.insert(Ingredient(name: "Яйцо"))
-    return IngredientsView()
-        .modelContainer(container)
+#Preview(traits: .sampleData) {
+    IngredientsView()
 }

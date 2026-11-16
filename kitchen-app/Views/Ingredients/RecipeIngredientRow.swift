@@ -11,8 +11,10 @@ struct RecipeIngredientRow: View {
             HStack(alignment: .firstTextBaseline) {
                 Text(name)
                 Spacer()
-                Text("\(quantity.formatted()) \(unit)")
-                    .foregroundStyle(.secondary)
+                if quantity > 0 {
+                    Text("\(quantity.formatted()) \(unit)")
+                        .foregroundStyle(.secondary)
+                }
             }
             if !comment.isEmpty {
                 Text(comment)
