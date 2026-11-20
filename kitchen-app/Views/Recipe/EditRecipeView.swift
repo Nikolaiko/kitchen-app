@@ -83,16 +83,6 @@ struct EditRecipeView: View {
                 }
             }
 
-
-            Section {
-                TextEditor(text: $recipe.ingredientsText)
-                    .frame(minHeight: 120)
-            } header: {
-                Text("Ингредиенты")
-            } footer: {
-                Text("По одному на строку, например: Картофель — 3 шт, кубиками")
-            }
-
             EquipmentSection(items: $recipe.equipment)
 
             Section("Теги") {

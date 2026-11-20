@@ -105,15 +105,6 @@ struct AddRecipeView: View {
                     }
                 }
 
-                Section {
-                    TextEditor(text: $ingredientsText)
-                        .frame(minHeight: 120)
-                } header: {
-                    Text("Ингредиенты")
-                } footer: {
-                    Text("По одному на строку, например: Картофель — 3 шт, кубиками")
-                }
-
                 EquipmentSection(items: $equipment)
 
                 Section("Теги") {
@@ -225,7 +216,6 @@ struct AddRecipeView: View {
         draft.isFavorite = isFavorite
         draft.coverPhoto = data
         draft.difficulty = difficulty
-        draft.ingredientsText = ingredientsText
         draft.equipment = equipment
         draft.coverPhoto = data
         draft.tags = selectedTags

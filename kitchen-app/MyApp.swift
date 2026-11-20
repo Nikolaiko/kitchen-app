@@ -3,14 +3,31 @@ import SwiftData
 
 @main struct MyApp: App {
 
+    @State private var store: Result<ModelContainer, Error>
+
     init() {
-        TagColorTransform.register()
+        _store = State(initialValue: Self.openStore())
     }
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            switch store {
+            case .success(let container):
+                ContentView()
+                    .modelContainer(container)
+            case .failure(let error):
+                ModelContainerErrorView {
+                    store = Self.openStore()
+                }
+            }
         }
-        .modelContainer(for: [DBRecipe.self, DBStep.self, DBTag.self, DBRecipeIngridient.self, DBIngridient.self])
+    }
+
+    private static func openStore() -> Result<ModelContainer, Error> {
+        let result = Result { try KitchenAppStore.make() }
+        if case .failure(let error) = result {
+            print("Не удалось открыть хранилище")
+        }
+        return result
     }
 }

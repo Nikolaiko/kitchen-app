@@ -24,7 +24,7 @@ struct StepsSection: View {
                         .foregroundStyle(.secondary)
                     Text(step.text)
                     Spacer()
-                    if let minutes = step.timeMinutes {
+                    if let minutes = step.durationMinutes {
                         Text("\(minutes) мин")
                             .foregroundStyle(.secondary)
                     }
