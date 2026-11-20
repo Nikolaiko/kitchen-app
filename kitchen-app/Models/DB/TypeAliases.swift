@@ -1,6 +1,6 @@
 import Foundation
 
-typealias CurrentSchema = SchemaV2
+typealias CurrentSchema = SchemaV3_1
 
 typealias Recipe = CurrentSchema.Recipe
 typealias Step = CurrentSchema.Step

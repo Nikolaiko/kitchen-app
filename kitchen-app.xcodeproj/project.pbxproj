@@ -7,22 +7,14 @@
 	objects = {
 
 /* Begin PBXContainerItemProxy section */
-        F5000000000000000000000A = {
-            isa = PBXContainerItemProxy;
-            containerPortal = 000000000000000000000000;
-            proxyType = 1;
-            remoteGlobalIDString = 000000000000000100000000;
-            remoteInfo = "kitchen-app";
-        };
+		F5000000000000000000000A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 000000000000000000000000 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 000000000000000100000000;
+			remoteInfo = "kitchen-app";
+		};
 /* End PBXContainerItemProxy section */
-
-/* Begin PBXTargetDependency section */
-        F5000000000000000000000B = {
-            isa = PBXTargetDependency;
-            target = 000000000000000100000000;
-            targetProxy = F5000000000000000000000A;
-        };
-/* End PBXTargetDependency section */
 
 /* Begin PBXFileReference section */
 		000000000000000000000120 /* kitchen-app.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "kitchen-app.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -36,10 +28,10 @@
 			sourceTree = "<group>";
 		};
 		F50000000000000000000003 /* kitchen-appTests */ = {
-            isa = PBXFileSystemSynchronizedRootGroup;
-            path = "kitchen-appTests";
-            sourceTree = "<group>";
-        };
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "kitchen-appTests";
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -48,12 +40,11 @@
 			files = (
 			);
 		};
-        F50000000000000000000005 = {
-            isa = PBXFrameworksBuildPhase;
-            buildActionMask = 2147483647;
-            files = ();
-            runOnlyForDeploymentPostprocessing = 0;
-        };
+		F50000000000000000000005 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+			);
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -61,7 +52,7 @@
 			isa = PBXGroup;
 			children = (
 				000000000000000000000010 /* kitchen-app */,
-                F50000000000000000000003 /* kitchen-appTests */,
+				F50000000000000000000003 /* kitchen-appTests */,
 				000000000000000000000020 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -70,7 +61,7 @@
 			isa = PBXGroup;
 			children = (
 				000000000000000000000120 /* kitchen-app.app */,
-                F50000000000000000000002 /* kitchen-appTests.xctest */,
+				F50000000000000000000002 /* kitchen-appTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -96,18 +87,27 @@
 			productReference = 000000000000000000000120 /* kitchen-app.app */;
 			productType = "com.apple.product-type.application";
 		};
-        F50000000000000000000001 /* kitchen-appTests */ = {
-            isa = PBXNativeTarget;
-            buildConfigurationList = F50000000000000000000007;
-            buildPhases = (F50000000000000000000004, F50000000000000000000005, F50000000000000000000006);
-            buildRules = ();
-            dependencies = (F5000000000000000000000B);
-            fileSystemSynchronizedGroups = (F50000000000000000000003);
-            name = "kitchen-appTests";
-            productName = "kitchen-appTests";
-            productReference = F50000000000000000000002;
-            productType = "com.apple.product-type.bundle.unit-test";
-        };
+		F50000000000000000000001 /* kitchen-appTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F50000000000000000000007 /* Build configuration list for PBXNativeTarget "kitchen-appTests" */;
+			buildPhases = (
+				F50000000000000000000004 /* Sources */,
+				F50000000000000000000005 /* Frameworks */,
+				F50000000000000000000006 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F5000000000000000000000B /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				F50000000000000000000003 /* kitchen-appTests */,
+			);
+			name = "kitchen-appTests";
+			productName = "kitchen-appTests";
+			productReference = F50000000000000000000002 /* kitchen-appTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -138,7 +138,7 @@
 			projectRoot = "";
 			targets = (
 				000000000000000100000000 /* kitchen-app */,
-                F50000000000000000000001 /* kitchen-appTests */,
+				F50000000000000000000001 /* kitchen-appTests */,
 			);
 		};
 /* End PBXProject section */
@@ -149,12 +149,11 @@
 			files = (
 			);
 		};
-        F50000000000000000000006 = {
-            isa = PBXResourcesBuildPhase;
-            buildActionMask = 2147483647;
-            files = ();
-            runOnlyForDeploymentPostprocessing = 0;
-        };
+		F50000000000000000000006 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			files = (
+			);
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -163,13 +162,20 @@
 			files = (
 			);
 		};
-        F50000000000000000000004 = {
-            isa = PBXSourcesBuildPhase;
-            buildActionMask = 2147483647;
-            files = ();
-            runOnlyForDeploymentPostprocessing = 0;
-        };
+		F50000000000000000000004 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+			);
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		F5000000000000000000000B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 000000000000000100000000 /* kitchen-app */;
+			targetProxy = F5000000000000000000000A /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		000000000000000011000000 /* Debug configuration for PBXProject "kitchen-app" */ = {
@@ -382,44 +388,52 @@
 			};
 			name = Release;
 		};
-        F50000000000000000000008 = {
-            isa = XCBuildConfiguration;
-            buildSettings = {
-                BUNDLE_LOADER = "$(TEST_HOST)";
-                CODE_SIGN_STYLE = Automatic;
-                GENERATE_INFOPLIST_FILE = YES;
-                IPHONEOS_DEPLOYMENT_TARGET = 27.0;
-                LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-                PRODUCT_BUNDLE_IDENTIFIER = com.nikolaibaklanov.kitchenapp.tests;
-                PRODUCT_NAME = "$(TARGET_NAME)";
-                SDKROOT = iphoneos;
-                SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-                SWIFT_DEFAULT_ACTOR_ISOLATION = nonisolated;
-                SWIFT_VERSION = 6.0;
-                TARGETED_DEVICE_FAMILY = 1;
-                TEST_HOST = "$(BUILT_PRODUCTS_DIR)/kitchen-app.app/kitchen-app";
-            };
-            name = Debug;
-        };
-        F50000000000000000000009 = {
-            isa = XCBuildConfiguration;
-            buildSettings = {
-                BUNDLE_LOADER = "$(TEST_HOST)";
-                CODE_SIGN_STYLE = Automatic;
-                GENERATE_INFOPLIST_FILE = YES;
-                IPHONEOS_DEPLOYMENT_TARGET = 27.0;
-                LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-                PRODUCT_BUNDLE_IDENTIFIER = com.nikolaibaklanov.kitchenapp.tests;
-                PRODUCT_NAME = "$(TARGET_NAME)";
-                SDKROOT = iphoneos;
-                SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-                SWIFT_DEFAULT_ACTOR_ISOLATION = nonisolated;
-                SWIFT_VERSION = 6.0;
-                TARGETED_DEVICE_FAMILY = 1;
-                TEST_HOST = "$(BUILT_PRODUCTS_DIR)/kitchen-app.app/kitchen-app";
-            };
-            name = Release;
-        };
+		F50000000000000000000008 /* Debug configuration for PBXNativeTarget "kitchen-appTests" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.nikolaibaklanov.kitchenapp.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_DEFAULT_ACTOR_ISOLATION = nonisolated;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/kitchen-app.app/kitchen-app";
+			};
+			name = Debug;
+		};
+		F50000000000000000000009 /* Release configuration for PBXNativeTarget "kitchen-appTests" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.nikolaibaklanov.kitchenapp.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_DEFAULT_ACTOR_ISOLATION = nonisolated;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/kitchen-app.app/kitchen-app";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -439,11 +453,14 @@
 			);
 			defaultConfigurationName = Release;
 		};
-        F50000000000000000000007 = {
-            isa = XCConfigurationList;
-            buildConfigurations = (F50000000000000000000008, F50000000000000000000009);
-            defaultConfigurationName = Release;
-        };
+		F50000000000000000000007 /* Build configuration list for PBXNativeTarget "kitchen-appTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F50000000000000000000008 /* Debug configuration for PBXNativeTarget "kitchen-appTests" */,
+				F50000000000000000000009 /* Release configuration for PBXNativeTarget "kitchen-appTests" */,
+			);
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
 	};
 	rootObject = 000000000000000000000000 /* Project object */;

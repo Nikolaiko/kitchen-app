@@ -10,7 +10,7 @@ import SwiftData
 
 enum KitchenAppMigrations: SchemaMigrationPlan {
     static var schemas: [any VersionedSchema.Type] {
-        [SchemaV1.self, SchemaV1_1.self, SchemaV2.self]
+        [SchemaV1.self, SchemaV1_1.self, SchemaV2.self, SchemaV3_1.self]
     }
 
     static let renameStepTimer = MigrationStage.lightweight(
@@ -18,7 +18,12 @@ enum KitchenAppMigrations: SchemaMigrationPlan {
         toVersion: SchemaV1_1.self
     )
 
+    static let addingBasedOnToRecipe = MigrationStage.lightweight(
+        fromVersion: SchemaV2.self,
+        toVersion: SchemaV3_1.self
+    )
+
     static var stages: [MigrationStage] {
-        [renameStepTimer, migrateTextIngridients]
+        [renameStepTimer, migrateTextIngridients, addingBasedOnToRecipe]
     }
 }

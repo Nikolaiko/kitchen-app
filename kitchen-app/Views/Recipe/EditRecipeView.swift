@@ -41,6 +41,14 @@ struct EditRecipeView: View {
                     in: 5...600,
                     step: 5)
 
+            BasedOnPicker(
+                selection: Binding(
+                    get: { recipe.basedOn },
+                    set: { updateBasedOn($0) }
+                ),
+                excludedRecipe: recipe
+            )
+
             Section("Ингредиенты") {
                 ForEach(recipe.orderedIngredients) { item in
                     RecipeIngredientRow(
@@ -118,6 +126,17 @@ struct EditRecipeView: View {
             Button("ОК", role: .cancel) { saveError = nil }
         } message: {
             Text(saveError ?? "")
+        }
+    }
+
+    private func updateBasedOn(_ baseRecipe: Recipe?) {
+        let previousRecipe = recipe.basedOn
+        recipe.basedOn = baseRecipe
+        do {
+            try modelContext.save()
+        } catch {
+            recipe.basedOn = previousRecipe
+            saveError = error.localizedDescription
         }
     }
 

@@ -25,6 +25,10 @@ struct AddRecipeView: View {
     @State
     private var selectedTags: [Tag] = []
 
+    // Связь с сохранённым рецептом назначаем только при сохранении черновика.
+    @State
+    private var selectedBasedOn: Recipe?
+
     @State
     private var newTagName: String = ""
 
@@ -75,6 +79,9 @@ struct AddRecipeView: View {
                         value: $minutes,
                         in: 5...600,
                         step: 5)
+
+                BasedOnPicker(selection: $selectedBasedOn, excludedRecipe: draft)
+
                 Section("Ингредиенты") {
                     ForEach(ingredientDrafts) { item in
                         RecipeIngredientRow(
@@ -209,6 +216,7 @@ struct AddRecipeView: View {
         draft.difficulty = difficulty
         draft.coverPhoto = data
         modelContext.insert(draft)
+        draft.basedOn = selectedBasedOn
         draft.tags = selectedTags
         draft.ingredients = ingredientDrafts.enumerated().map { position, item in
             item.makeModel(position: position)
